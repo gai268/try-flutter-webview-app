@@ -33,6 +33,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    // スクロールビューのコンテンツの更新を開始することができる標準的なコントローラです。
+    // ユーザーの垂直方向にスワイプするジェスチャーでWebViewコンテンツを更新する場合に使用されます。
     pullToRefreshController = PullToRefreshController(
       options: PullToRefreshOptions(
         color: Colors.blue,
