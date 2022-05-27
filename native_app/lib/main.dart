@@ -49,7 +49,8 @@ class WebViewExampleState extends State<WebViewExample> {
   @override
   Widget build(BuildContext context) {
     return const WebView(
-      initialUrl: 'https://flutter.dev',
+      initialUrl: 'http://localhost:3000',
+      javascriptMode: JavascriptMode.unrestricted,
     );
   }
 }
