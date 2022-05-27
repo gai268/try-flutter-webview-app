@@ -1,9 +1,9 @@
-# try-simple-webview-app
+# try-flutter-webview-app
 ## Set up
 Installing Flutter  
 https://docs.flutter.dev/get-started/install
 
-## Run a simple webview app for dev.
+## Run a webview app for dev.
 ```zsh
 # run a Next.js web app.
 cd web-app
