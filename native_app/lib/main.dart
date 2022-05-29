@@ -18,10 +18,10 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => new _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   final GlobalKey webViewKey = GlobalKey();
 
   InAppWebViewController? webViewController;
@@ -57,62 +57,62 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: InAppWebView(
-      key: webViewKey,
-      initialUrlRequest: URLRequest(url: Uri.parse("http://localhost:3000")),
-      initialOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(
-            useShouldOverrideUrlLoading: true,
-            mediaPlaybackRequiresUserGesture: false,
-          ),
-          android: AndroidInAppWebViewOptions(
-            useHybridComposition: true,
-          ),
-          ios: IOSInAppWebViewOptions(
-            allowsInlineMediaPlayback: true,
-          )),
-      pullToRefreshController: pullToRefreshController,
-      onWebViewCreated: (controller) {
-        webViewController = controller;
-      },
-      onLoadStart: (controller, url) {},
-      androidOnPermissionRequest: (controller, origin, resources) async {
-        return PermissionRequestResponse(
-            resources: resources,
-            action: PermissionRequestResponseAction.GRANT);
-      },
-      shouldOverrideUrlLoading: (controller, navigationAction) async {
-        var url = navigationAction.request.url!;
+    return SafeArea( 
+      child: InAppWebView(
+        key: webViewKey,
+        initialUrlRequest: URLRequest(url: Uri.parse("http://localhost:3000")),
+        initialOptions: InAppWebViewGroupOptions(
+            crossPlatform: InAppWebViewOptions(
+              useShouldOverrideUrlLoading: true,
+              mediaPlaybackRequiresUserGesture: false,
+            ),
+            android: AndroidInAppWebViewOptions(
+              useHybridComposition: true,
+            ),
+            ios: IOSInAppWebViewOptions(
+              allowsInlineMediaPlayback: true,
+            )),
+        pullToRefreshController: pullToRefreshController,
+        onWebViewCreated: (controller) {
+          webViewController = controller;
+        },
+        onLoadStart: (controller, url) {},
+        androidOnPermissionRequest: (controller, origin, resources) async {
+          return PermissionRequestResponse(
+              resources: resources,
+              action: PermissionRequestResponseAction.GRANT);
+        },
+        shouldOverrideUrlLoading: (controller, navigationAction) async {
+          var url = navigationAction.request.url!;
 
-        if (!["http", "https", "file", "chrome", "data", "javascript", "about"]
-            .contains(url.scheme) || url.host != "localhost") {
-          if (await canLaunchUrl(url)) {
-            // ユーザー規定のブラウザで開きます
-            await launchUrl(url);
-            return NavigationActionPolicy.CANCEL;
+          if (!["http", "https", "file", "chrome", "data", "javascript", "about"]
+              .contains(url.scheme) || url.host != "localhost") {
+            if (await canLaunchUrl(url)) {
+              // ユーザー規定のブラウザで開きます
+              await launchUrl(url);
+              return NavigationActionPolicy.CANCEL;
+            }
           }
-        }
-        return NavigationActionPolicy.ALLOW;
-      },
-      onLoadStop: (controller, url) async {
-        pullToRefreshController.endRefreshing();
-      },
-      onLoadError: (controller, url, code, message) {
-        pullToRefreshController.endRefreshing();
-      },
-      onProgressChanged: (controller, progress) {
-        if (progress == 100) {
+          return NavigationActionPolicy.ALLOW;
+        },
+        onLoadStop: (controller, url) async {
           pullToRefreshController.endRefreshing();
-        }
-        setState(() {
-          this.progress = progress / 100;
-        });
-      },
-      onUpdateVisitedHistory: (controller, url, androidIsReload) {},
-      onConsoleMessage: (controller, consoleMessage) {
-        print(consoleMessage);
-      },
+        },
+        onLoadError: (controller, url, code, message) {
+          pullToRefreshController.endRefreshing();
+        },
+        onProgressChanged: (controller, progress) {
+          if (progress == 100) {
+            pullToRefreshController.endRefreshing();
+          }
+          setState(() {
+            this.progress = progress / 100;
+          });
+        },
+        onUpdateVisitedHistory: (controller, url, androidIsReload) {},
+        onConsoleMessage: (controller, consoleMessage) {
+          print(consoleMessage);
+        },
     ));
   }
 }
